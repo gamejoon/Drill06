@@ -16,8 +16,16 @@ def handle_events():
 def run_motion():
     global frame
 
-    character.clip_draw(frame * 100, 0, 100, 100, x, y)
+    character.clip_draw(frame * 100, 0, 100, 100, x2, y2)
     frame = (frame + 1) % 8
+
+def route_rate():
+    global x2, y2, route_frame
+
+    if arrow_arr != []:
+        x2 = (1 - route_frame / 24) * x1 + (route_frame / 24) * arrow_arr[0][0]
+        y2 = (1 - route_frame / 24) * y1 + (route_frame / 24) * arrow_arr[0][1]
+    route_frame = (route_frame + 1) % 25
 
 TUK_WIDTH, TUK_HEIGHT = 1280, 1024
 
@@ -30,13 +38,19 @@ character = load_image("run_animation.png")
 running = True
 
 frame = 0
-x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
+x1, y1 = TUK_WIDTH // 2, TUK_HEIGHT // 2
+x2, y2 = x1, y1
+route_frame = 0
 arrow_arr = []
 
 while running:
     clear_canvas()
 
     handle_events()
+    route_rate()
+    if arrow_arr != [] and (x2, y2) == (arrow_arr[0][0], arrow_arr[0][1]):
+        x1, y1 = x2, y2
+        del arrow_arr[0]
 
     background.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
     for i in range(0, len(arrow_arr)):
