@@ -16,7 +16,10 @@ def handle_events():
 def run_motion():
     global frame
 
-    character.clip_draw(frame * 100, 0, 100, 100, x2, y2)
+    if arrow_arr != [] and (arrow_arr[0][0] - x1) < 0:
+         character.clip_composite_draw(frame * 100, 0, 100, 100, 0, 'h', x2, y2, 100, 100)
+    else:
+        character.clip_draw(frame * 100, 0, 100, 100, x2, y2)
     frame = (frame + 1) % 8
 
 def route_rate():
@@ -25,7 +28,7 @@ def route_rate():
     if arrow_arr != []:
         x2 = (1 - route_frame / 24) * x1 + (route_frame / 24) * arrow_arr[0][0]
         y2 = (1 - route_frame / 24) * y1 + (route_frame / 24) * arrow_arr[0][1]
-    route_frame = (route_frame + 1) % 25
+        route_frame = (route_frame + 1) % 25
 
 TUK_WIDTH, TUK_HEIGHT = 1280, 1024
 
