@@ -13,9 +13,15 @@ def handle_events():
         elif event.type == SDL_MOUSEBUTTONDOWN:
             arrow_arr.append((event.x, TUK_HEIGHT - 1 - event.y))
 
-TUK_WIDHT, TUK_HEIGHT = 1280, 1024
+def run_motion():
+    global frame
 
-open_canvas(TUK_WIDHT, TUK_HEIGHT)
+    character.clip_draw(frame * 100, 0, 100, 100, x, y)
+    frame = (frame + 1) % 8
+
+TUK_WIDTH, TUK_HEIGHT = 1280, 1024
+
+open_canvas(TUK_WIDTH, TUK_HEIGHT)
 
 background = load_image("TUK_GROUND.png")
 arrow = load_image("hand_arrow.png")
@@ -23,6 +29,8 @@ character = load_image("run_animation.png")
 
 running = True
 
+frame = 0
+x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
 arrow_arr = []
 
 while running:
@@ -30,10 +38,12 @@ while running:
 
     handle_events()
 
-    background.draw(TUK_WIDHT // 2, TUK_HEIGHT // 2)
+    background.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
     for i in range(0, len(arrow_arr)):
         arrow.draw(arrow_arr[i][0], arrow_arr[i][1])
+    run_motion()
 
     update_canvas()
+    delay(0.05)
 
 close_canvas()
